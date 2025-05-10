@@ -1,0 +1,3 @@
+
+class ExperimentConfigException(Exception):
+    pass
