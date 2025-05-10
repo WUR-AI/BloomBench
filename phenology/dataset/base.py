@@ -597,7 +597,7 @@ class BaseDataset:
         ax.scatter(xs, ys, color='tomato')
         a = reg.coef_[0]
         b = reg.intercept_
-        ax.plot(xs_lin, ys_lin, '--', color='black', label=f'$f(x)=${a:.2f}$x${'+' if b >= 0 else ''}{b:.2f}')
+        ax.plot(xs_lin, ys_lin, '--', color='black', label=f'$f(x)=${a:.2f}$x${"+" if b >= 0 else ""}{b:.2f}')
 
         ymin = 0
         ymax = 365

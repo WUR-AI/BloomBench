@@ -123,7 +123,8 @@ class AdaBoostModel(BaseModel):
                                      n_iter=hf_n_iter,
                                      cv=hf_cv,
                                      n_jobs=min(hf_n_iter, 10),
-                                     verbose=4,
+                                     # verbose=4,
+                                     verbose=0,
                                      )
 
             hf = clf.fit(m, t)
