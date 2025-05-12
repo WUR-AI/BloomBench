@@ -39,8 +39,8 @@ class CNNModel(BaseTorchModel):
         last_pool = nn.AdaptiveAvgPool1d(64)
         l_out = nn.Linear(64, 1)
 
-        self._cnn = nn.ModuleList([l_in] + [
-            nn.ModuleList([
+        self._cnn = nn.Sequential(*([l_in] + [
+            nn.Sequential(*[
                 nn.AvgPool1d(kernel_size=2,),
                 nn.Conv1d(in_channels=hidden_size,
                           out_channels=hidden_size,
@@ -49,7 +49,7 @@ class CNNModel(BaseTorchModel):
                           )
             ])
             for _ in range(num_layers - 1)
-        ] + [last_pool, nn.Flatten(), l_out])
+        ] + [last_pool, nn.Flatten(), l_out]))
 
     def forward(self, xs: dict, **kwargs) -> tuple:
 
