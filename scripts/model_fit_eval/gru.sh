@@ -9,7 +9,7 @@ do
       run_prefix="fit_eval"
       dataset_time_step="daily"
       data_keys="temperature_2m_mean daylight_duration"
-      model_cls="GradientBoostingModel"
+      model_cls="GRUModel"
 
       model_name="${model_cls}_${dataset_key}_seed_${seed}"
       run_name="${run_prefix}_${model_name}"
@@ -25,7 +25,17 @@ do
         --model_cls "${model_cls}"
         --model_name "${model_name}"
         --seed "${seed}"
-#        --fit_hyperparameters
+        --batch_size 64
+        --num_epochs 1000
+        --optimizer adam
+        --lr 1e-3
+        --weight_decay 1e-4
+        --scheduler_step_size 100
+        --scheduler_decay 0.9
+        --early_stopping
+        --early_stopping_patience 5
+        --early_stopping_min_delta 1e-3
+        --validation_period 10
         )
 
       # Run the command

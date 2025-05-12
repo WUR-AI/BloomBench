@@ -7,6 +7,7 @@ from phenology.models.adaboost import AdaBoostModel
 from phenology.models.base import NullModel, BaseModel
 from phenology.models.base_torch import NullTorchModel
 from phenology.models.gradient_boosting import GradientBoostingModel
+from phenology.models.gru import GRUModel
 from phenology.models.linear import LinearTrendModel
 from phenology.models.lstm import LSTMModel
 from phenology.models.mean import MeanModel
@@ -22,6 +23,7 @@ MODEL_CLS_OPTIONS = (
     AdaBoostModel,
     NullTorchModel,  # For testing
     LSTMModel,
+    GRUModel,
 )
 
 MODEL_STR_OPTIONS = tuple(
@@ -72,6 +74,9 @@ def configure_argparser_model(parser: argparse.ArgumentParser, model_cls_name: s
             _configure_argparser_fit_torch(parser)
 
         case LSTMModel.__name__:
+            _configure_argparser_fit_torch(parser)
+
+        case GRUModel.__name__:
             _configure_argparser_fit_torch(parser)
 
         case _:
@@ -248,6 +253,8 @@ def obtain_model_from_args(args: argparse.Namespace, dataset: Dataset) -> BaseMo
 
         case RandomForestModel.__name__:
 
+            model_kwargs = None if args.fit_hyperparameters else _map_kwargs_random_forest(args.dataset_name)
+
             model, _ = RandomForestModel.fit(
                 target_key=target,
                 dataset=dataset,
@@ -256,9 +263,14 @@ def obtain_model_from_args(args: argparse.Namespace, dataset: Dataset) -> BaseMo
                 hf_n_iter=args.hf_n_iter,
                 hf_cv=args.hf_cv,
                 hf_random_state=args.seed,
+                model_kwargs={
+                    'random_forest_kwargs': model_kwargs,
+                },
             )
 
         case GradientBoostingModel.__name__:
+
+            model_kwargs = None if args.fit_hyperparameters else _map_kwargs_gradient_boosting(args.dataset_name)
 
             model, _ = GradientBoostingModel.fit(
                 target_key=target,
@@ -268,9 +280,14 @@ def obtain_model_from_args(args: argparse.Namespace, dataset: Dataset) -> BaseMo
                 hf_n_iter=args.hf_n_iter,
                 hf_cv=args.hf_cv,
                 hf_random_state=args.seed,
+                model_kwargs={
+                    'gradient_boosting_kwargs': model_kwargs,
+                },
             )
 
         case AdaBoostModel.__name__:
+
+            model_kwargs = None if args.fit_hyperparameters else _map_kwargs_adaboost(args.dataset_name)
 
             model, _ = AdaBoostModel.fit(
                 target_key=target,
@@ -280,6 +297,9 @@ def obtain_model_from_args(args: argparse.Namespace, dataset: Dataset) -> BaseMo
                 hf_n_iter=args.hf_n_iter,
                 hf_cv=args.hf_cv,
                 hf_random_state=args.seed,
+                model_kwargs={
+                    'adaboost_kwargs': model_kwargs,
+                },
             )
 
         case NullTorchModel.__name__:
@@ -342,36 +362,35 @@ def obtain_model_from_args(args: argparse.Namespace, dataset: Dataset) -> BaseMo
                 device=device,
             )
 
-        #
-        # case LSTMModel.__name__:
-        #
-        #     device = torch.device('cuda' if torch.cuda.is_available() and not args.disable_cuda else 'cpu')
-        #
-        #     model, _ = LSTMModel.fit(
-        #         target_key=target,
-        #         dataset=dataset,
-        #         model_name=model_name,
-        #         num_epochs=args.num_epochs,
-        #         batch_size=args.batch_size,
-        #         scheduler_step_size=args.scheduler_step_size,
-        #         scheduler_decay=args.scheduler_decay,
-        #         clip_gradient=args.clip_gradient,
-        #         val_period=args.validation_period,
-        #         optimizer=args.optimizer,
-        #         optimizer_kwargs={
-        #             'lr': args.lr,
-        #             **({'weight_decay': args.weight_decay} if args.weight_decay is not None else {}),
-        #         },
-        #         early_stopping=args.early_stopping,
-        #         early_stopping_patience=args.early_stopping_patience,
-        #         early_stopping_min_delta=args.early_stopping_min_delta,
-        #         model_kwargs={
-        #             'step_size': args.dataset_time_step,
-        #             'data_keys': args.data_keys,
-        #         },
-        #         seed=args.seed,
-        #         device=device,
-        #     )
+        case GRUModel.__name__:
+
+            device = torch.device('cuda' if torch.cuda.is_available() and not args.disable_cuda else 'cpu')
+
+            model, _ = LSTMModel.fit(
+                target_key=target,
+                dataset=dataset,
+                model_name=model_name,
+                num_epochs=args.num_epochs,
+                batch_size=args.batch_size,
+                scheduler_step_size=args.scheduler_step_size,
+                scheduler_decay=args.scheduler_decay,
+                clip_gradient=args.clip_gradient,
+                val_period=args.validation_period,
+                optimizer=args.optimizer,
+                optimizer_kwargs={
+                    'lr': args.lr,
+                    **({'weight_decay': args.weight_decay} if args.weight_decay is not None else {}),
+                },
+                early_stopping=args.early_stopping,
+                early_stopping_patience=args.early_stopping_patience,
+                early_stopping_min_delta=args.early_stopping_min_delta,
+                model_kwargs={
+                    'step_size': args.dataset_time_step,
+                    'data_keys': args.data_keys,
+                },
+                seed=args.seed,
+                device=device,
+            )
 
         case _:  # Use default settings if none were specified
             model, _ = model_cls.fit(
@@ -382,4 +401,96 @@ def obtain_model_from_args(args: argparse.Namespace, dataset: Dataset) -> BaseMo
 
     return model
 
+
+def _map_kwargs_adaboost(dataset_key: str) -> dict:
+    # Obtained after hyperparameter search
+    match dataset_key:
+        case "GMU_Cherry_Japan":
+            return {'n_estimators': 179}
+        case "GMU_Cherry_Switzerland":
+            return {'n_estimators': 130}
+        case "GMU_Cherry_South_Korea":
+            return {'n_estimators': 80}
+        case "PEP725_Apple":
+            return {'n_estimators': 138}
+        case "PEP725_Pear":
+            return {'n_estimators': 140}
+        case "PEP725_Peach":
+            return {'n_estimators': 26}
+        case "PEP725_Almond":
+            return {'n_estimators': 80}
+        case "PEP725_Hazel":
+            return {'n_estimators': 21}
+        case "PEP725_Cherry":
+            return {'n_estimators': 38}
+        case "PEP725_Apricot":
+            return {'n_estimators': 80}
+        case "PEP725_Blackthorn":
+            return {'n_estimators': 143}
+        case "PEP725_Plum":
+            return {'n_estimators': 21}
+        case _:
+            raise ExperimentConfigException(f'No kwargs for dataset "{dataset_key}')
+
+
+def _map_kwargs_gradient_boosting(dataset_key: str) -> dict:
+    # Obtained after hyperparameter search
+    match dataset_key:
+        case "GMU_Cherry_Japan":
+            return {'n_estimators': 110, 'max_depth': 5, 'min_samples_split': 18}
+        case "GMU_Cherry_Switzerland":
+            return {'n_estimators': 130, 'max_depth': 1, 'min_samples_split': 18}
+        case "GMU_Cherry_South_Korea":
+            return {'n_estimators': 130, 'max_depth': 1, 'min_samples_split': 18}
+        case "PEP725_Apple":
+            return {'n_estimators': 58, 'max_depth': 7, 'min_samples_split': 19}
+        case "PEP725_Pear":
+            return {'n_estimators': 97, 'max_depth': 3, 'min_samples_split': 6}
+        case "PEP725_Peach":
+            return {'n_estimators': 97, 'max_depth': 3, 'min_samples_split': 6}
+        case "PEP725_Almond":
+            return {'n_estimators': 21, 'max_depth': 10, 'min_samples_split': 20}
+        case "PEP725_Hazel":
+            return {'n_estimators': 140, 'max_depth': 6, 'min_samples_split': 20}
+        case "PEP725_Cherry":
+            return {'n_estimators': 122, 'max_depth': 4, 'min_samples_split': 17}
+        case "PEP725_Apricot":
+            return {'n_estimators': 130, 'max_depth': 1, 'min_samples_split': 18}
+        case "PEP725_Blackthorn":
+            return {'n_estimators': 140, 'max_depth': 6, 'min_samples_split': 20}
+        case "PEP725_Plum":
+            return {'n_estimators': 58, 'max_depth': 7, 'min_samples_split': 19}
+        case _:
+            raise ExperimentConfigException(f'No kwargs for dataset "{dataset_key}')
+
+
+def _map_kwargs_random_forest(dataset_key: str) -> dict:
+    # Obtained after hyperparameter search
+    match dataset_key:
+        case "GMU_Cherry_Japan":
+            return {'n_estimators': 132, 'max_depth': 9, 'min_samples_split': 9}
+        case "GMU_Cherry_Switzerland":
+            return {'n_estimators': 138, 'max_depth': 7, 'min_samples_split': 15}
+        case "GMU_Cherry_South_Korea":
+            return {'n_estimators': 110, 'max_depth': 5, 'min_samples_split': 18}
+        case "PEP725_Apple":
+            return {'n_estimators': 132, 'max_depth': 9, 'min_samples_split': 9}
+        case "PEP725_Pear":
+            return {'n_estimators': 135, 'max_depth': 8, 'min_samples_split': 15}
+        case "PEP725_Peach":
+            return {'n_estimators': 132, 'max_depth': 9, 'min_samples_split': 9}
+        case "PEP725_Almond":
+            return {'n_estimators': 129, 'max_depth': 8, 'min_samples_split': 3}
+        case "PEP725_Hazel":
+            return {'n_estimators': 134, 'max_depth': 9, 'min_samples_split': 11}
+        case "PEP725_Cherry":
+            return {'n_estimators': 134, 'max_depth': 9, 'min_samples_split': 11}
+        case "PEP725_Apricot":
+            return {'n_estimators': 21, 'max_depth': 10, 'min_samples_split': 20}
+        case "PEP725_Blackthorn":
+            return {'n_estimators': 132, 'max_depth': 9, 'min_samples_split': 9}
+        case "PEP725_Plum":
+            return {'n_estimators': 132, 'max_depth': 9, 'min_samples_split': 9}
+        case _:
+            raise ExperimentConfigException(f'No kwargs for dataset "{dataset_key}')
 
