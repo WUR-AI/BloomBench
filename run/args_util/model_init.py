@@ -6,6 +6,7 @@ from phenology.dataset.dataset import Dataset
 from phenology.models.adaboost import AdaBoostModel
 from phenology.models.base import NullModel, BaseModel
 from phenology.models.base_torch import NullTorchModel
+from phenology.models.cnn import CNNModel
 from phenology.models.gradient_boosting import GradientBoostingModel
 from phenology.models.gru import GRUModel
 from phenology.models.linear import LinearTrendModel
@@ -24,6 +25,7 @@ MODEL_CLS_OPTIONS = (
     NullTorchModel,  # For testing
     LSTMModel,
     GRUModel,
+    CNNModel,
 )
 
 MODEL_STR_OPTIONS = tuple(
@@ -77,6 +79,9 @@ def configure_argparser_model(parser: argparse.ArgumentParser, model_cls_name: s
             _configure_argparser_fit_torch(parser)
 
         case GRUModel.__name__:
+            _configure_argparser_fit_torch(parser)
+
+        case CNNModel.__name__:
             _configure_argparser_fit_torch(parser)
 
         case _:
@@ -366,7 +371,37 @@ def obtain_model_from_args(args: argparse.Namespace, dataset: Dataset) -> BaseMo
 
             device = torch.device('cuda' if torch.cuda.is_available() and not args.disable_cuda else 'cpu')
 
-            model, _ = LSTMModel.fit(
+            model, _ = GRUModel.fit(
+                target_key=target,
+                dataset=dataset,
+                model_name=model_name,
+                num_epochs=args.num_epochs,
+                batch_size=args.batch_size,
+                scheduler_step_size=args.scheduler_step_size,
+                scheduler_decay=args.scheduler_decay,
+                clip_gradient=args.clip_gradient,
+                val_period=args.validation_period,
+                optimizer=args.optimizer,
+                optimizer_kwargs={
+                    'lr': args.lr,
+                    **({'weight_decay': args.weight_decay} if args.weight_decay is not None else {}),
+                },
+                early_stopping=args.early_stopping,
+                early_stopping_patience=args.early_stopping_patience,
+                early_stopping_min_delta=args.early_stopping_min_delta,
+                model_kwargs={
+                    'step_size': args.dataset_time_step,
+                    'data_keys': args.data_keys,
+                },
+                seed=args.seed,
+                device=device,
+            )
+
+        case CNNModel.__name__:
+
+            device = torch.device('cuda' if torch.cuda.is_available() and not args.disable_cuda else 'cpu')
+
+            model, _ = CNNModel.fit(
                 target_key=target,
                 dataset=dataset,
                 model_name=model_name,
