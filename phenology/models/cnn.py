@@ -50,7 +50,7 @@ class CNNModel(BaseTorchModel):
                           )
             ])
             for _ in range(num_layers - 1)
-        ] + [last_pool, nn.ReLU(), nn.Flatten(), l_out]))
+        ] + [nn.Flatten(), last_pool, nn.ReLU(), l_out]))
 
     def forward(self, xs: dict, **kwargs) -> tuple:
 
