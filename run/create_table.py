@@ -93,6 +93,7 @@ if __name__ == '__main__':
             [f'${mae_avg:.2f} \\pm {mae_std:.2f}$' for mae_avg, mae_std in zip(maes_avg_tst, maes_std_tst)]
         ) + '\\\\'
 
-        # print(line_tst)
         print(line_trn)
+        print()
+        print(line_tst)
 
