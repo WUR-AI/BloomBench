@@ -15,7 +15,7 @@ from phenology.config import PATH_DATA, KEY_GMU_CHERRY
 
 
 # Source directory for all original competition data
-DATA_PATH_ORIGINAL = os.path.join(PATH_DATA, KEY_GMU_CHERRY, 'data')
+DATA_PATH_ORIGINAL = os.path.join(PATH_DATA, 'gmu_cherry', 'data')
 
 # Individual file names
 FILENAME_JAPAN = 'japan.csv'
