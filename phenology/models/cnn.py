@@ -41,7 +41,7 @@ class CNNModel(BaseTorchModel):
 
         self._cnn = nn.Sequential(*([l_in] + [
             nn.Sequential(*[
-                nn.AvgPool1d(kernel_size=2,),
+                nn.AvgPool1d(kernel_size=3,),
                 nn.ReLU(),
                 nn.Conv1d(in_channels=hidden_size,
                           out_channels=hidden_size,

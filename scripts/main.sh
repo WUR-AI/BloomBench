@@ -20,5 +20,5 @@
 #./scripts/model_fit_eval/gradient_boosting.sh
 #./scripts/model_fit_eval/adaboost.sh
 #./scripts/model_fit_eval/lstm.sh
-./scripts/model_fit_eval/gru.sh
-
+#./scripts/model_fit_eval/gru.sh
+./scripts/model_fit_eval/cnn.sh
