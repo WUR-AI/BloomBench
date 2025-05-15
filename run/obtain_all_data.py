@@ -62,20 +62,10 @@ if __name__ == '__main__':
             'hourly': [
                 'temperature_2m',
                 'is_day',
-                # 'precipitation',
-                # 'relative_humidity_2m',
-                # 'soil_moisture_0_to_7cm',
-                # 'soil_moisture_7_to_28cm',
-                # 'shortwave_radiation',
             ],
             'daily': [
-                # "temperature_2m_max",
-                # "temperature_2m_min",
                 "temperature_2m_mean",
                 "daylight_duration",
-                # "sunshine_duration",
-                # "precipitation_sum",
-                # "shortwave_radiation_sum",
             ],
         }
 

@@ -90,8 +90,6 @@ COUNTRY_CODES = tuple(COUNTRY_CODE_NAME.keys())
 
 # Lower bound on grid spatial resolution
 MIN_GRID_SIZE = (0.25, 0.25)  # Degrees (lat, lon)  ERA5 GRID
-# # MIN_GRID_SIZE = (0.05, 0.05)  # Degrees (lat, lon)  CERRA GRID
-# # MIN_GRID_SIZE = (0.1, 0.1)  # Degrees (lat, lon)
 
 """
     Data Configuration
@@ -105,20 +103,5 @@ assert len(AGG_GRID_SIZE) == 2
 # Make sure the grid is at least as big as the ERA5 grid
 # Otherwise data leakage can occur if two observations originate from the same cell
 assert all([v >= w for v, w in zip(AGG_GRID_SIZE, MIN_GRID_SIZE)])
-
-#
-# YEAR_MIN = 1951
-# # YEAR_MAX = 1986  # Inclusive
-# YEAR_MAX = 2024  # Inclusive
-#
-# YEAR_RANGE = tuple(range(YEAR_MIN, YEAR_MAX + 1))
-
-
-# # TODO -- separate exp config
-# # Spatial resolution of grid used to do the dataset train/val/test split
-# SPLIT_GRID_SIZE = AGG_GRID_SIZE
-# # Ensure the grid size is not smaller than that used to aggregate observations
-# assert all([v >= w for v, w in zip(SPLIT_GRID_SIZE, AGG_GRID_SIZE)])
-
 
 
