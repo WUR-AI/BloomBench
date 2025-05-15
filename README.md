@@ -26,3 +26,11 @@ After the setup is complete, reproduce all results in the benchmark by running `
 Please note that in our codebase, upon loading a dataset it is stored in memory during the first iteration over all data. The first iteration will thus be slow and require patience (~a minute), but subsequent iterations are significantly faster.
 
 Experiments were executed on a Lenovo p16 laptop (Intel Core i9-12950HX, 2300Mhz, 32GB RAM, RTX A5500 GPU) running Windows 11 Enterprise.
+
+## License
+
+For the PEP725 data use policy, please see [their website](http://www.pep725.eu/downloads/PEP725_Data_Use_Policy.pdf).
+
+For GMU data, please see `phenology/data/gmu_cherry/data/README.md` for the applicable license.
+
+For the ERA5 feature data, see the license provided at [10.5281/zenodo.15405662](https://doi.org/10.5281/zenodo.15405662).
