@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#python_key="python3"
-python_key="py"
+python_key="python3"
+#python_key="py"
 
 seeds=(94 85 30 93 50)
 

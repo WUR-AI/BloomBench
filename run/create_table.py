@@ -2,7 +2,9 @@ import numpy as np
 
 from phenology.evaluation.evaluation import EvaluationResult
 from phenology.models.adaboost import AdaBoostModel
+from phenology.models.cnn import CNNModel
 from phenology.models.gradient_boosting import GradientBoostingModel
+from phenology.models.gru import GRUModel
 from phenology.models.linear import LinearTrendModel
 from phenology.models.lstm import LSTMModel
 from phenology.models.mean import MeanModel
@@ -10,19 +12,19 @@ from phenology.models.random_forest import RandomForestModel
 
 if __name__ == '__main__':
 
-    dataset_keys = (
-        'GMU_Cherry_Japan',
-        'GMU_Cherry_Switzerland',
-        'GMU_Cherry_South_Korea',
+    dataset_keys = (  # In same order as the paper!
         'PEP725_Apple',
         'PEP725_Pear',
         'PEP725_Peach',
         'PEP725_Almond',
         'PEP725_Hazel',
-        'PEP725_Cherry',
         'PEP725_Apricot',
-        'PEP725_Blackthorn',
         'PEP725_Plum',
+        'PEP725_Blackthorn',
+        'PEP725_Cherry',
+        'GMU_Cherry_Japan',
+        'GMU_Cherry_Switzerland',
+        'GMU_Cherry_South_Korea',
     )
 
     model_keys = (
@@ -31,6 +33,8 @@ if __name__ == '__main__':
         RandomForestModel.__name__,
         GradientBoostingModel.__name__,
         AdaBoostModel.__name__,
+        CNNModel.__name__,
+        GRUModel.__name__,
         LSTMModel.__name__,
     )
 
@@ -89,5 +93,6 @@ if __name__ == '__main__':
             [f'${mae_avg:.2f} \\pm {mae_std:.2f}$' for mae_avg, mae_std in zip(maes_avg_tst, maes_std_tst)]
         ) + '\\\\'
 
-        print(line_tst)
+        # print(line_tst)
+        print(line_trn)
 

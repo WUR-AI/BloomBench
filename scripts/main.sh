@@ -17,8 +17,9 @@
 #./scripts/model_fit_eval/mean.sh
 #./scripts/model_fit_eval/linear_trend.sh
 #./scripts/model_fit_eval/random_forest.sh
-#./scripts/model_fit_eval/gradient_boosting.sh
-#./scripts/model_fit_eval/adaboost.sh
+./scripts/model_fit_eval/gradient_boosting.sh
+./scripts/model_fit_eval/adaboost.sh
 #./scripts/model_fit_eval/lstm.sh
-./scripts/model_fit_eval/gru.sh
+#./scripts/model_fit_eval/gru.sh
+./scripts/model_fit_eval/cnn.sh
 
