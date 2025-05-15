@@ -177,5 +177,6 @@ if __name__ == '__main__':
     print(os.path.abspath(__file__))
     print(os.path.abspath(os.path.join(__file__, os.pardir)))
 
-
+    print(DATA_PATH_JAPAN)
+    print(get_data_japan())
 
