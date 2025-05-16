@@ -6,18 +6,22 @@ BloomBench is a benchmark dataset for evaluating machine learning models for pre
 
 ## Data overview
 
-Phenophase observations have been obtained from the Pan European Phenology Project (PEP725, http://pep725.eu/). These observations are contained in the repository.
-Part of the data of George Mason University's competition on cherry tree flowering was used in this repository. To ensure reproducibility of the work we included a snapshot of the dataset that we used in this repository. The original data sources are listed in the corresponding `phenology/data/gmu_cherry/data/README.md`.
+Phenophase observations have been obtained from the Pan European Phenology Project (PEP725, http://pep725.eu/).
+Part of the data of George Mason University's competition on cherry tree flowering was used in this repository. To ensure reproducibility of the work we included a snapshot of the dataset that we used in this repository. The original data sources (as well as corresponding license) are listed in the corresponding `phenology/data/gmu_cherry/data/README.md`.
 Data from the ERA5 climate reanalysis were used as meteorological features. The subset used for this dataset is hosted at [10.5281/zenodo.15405662](https://doi.org/10.5281/zenodo.15405662) (since Zenodo supports release under the original license). The codebase will download it (about 4GB) automatically.
 
 ## Usage
 
 ### Setup
 
-BloomBench was developed and ran using Python version 3.11. CUDA version 11.4 was used.
+BloomBench was developed and ran using Python version 3.11. CUDA version 11.4 was used. 
 
-- Run `scripts/setup.sh` to install python packages and obtain the required data.
-- Optionally, run `scripts/obtain_all_data.sh` to verify whether all data is indeed present. Should any PEP725 be missing (which shouldn't be the case), the code will attempt to download it. For this it requires PEP725 login credentials. See `phenology/data/pep725/README.md` for details. In case any meteorological data is missing (which also should not be the case) these will be obtained automatically as well. At this time, missing data of the GMU repository cannot be obtained automatically.
+To run BloomBench, a few steps are required:
+
+- Clone this repository
+- Create login credentials at the [PEP725](http://pep725.eu/) website.
+- Create a `phenology/data/pep725/credentials.txt` file containing a single line with the username and password separated by a single space.
+- Run `scripts/setup.sh` to install python packages and automatically obtain all required data.
 
 ### Run
 
