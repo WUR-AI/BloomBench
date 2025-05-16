@@ -6,7 +6,7 @@ BloomBench is a benchmark dataset for evaluating machine learning models for pre
 
 ## Data overview
 
-Phenophase observations have been obtained from the Pan European Phenology Project (PEP725, http://pep725.eu/).
+Phenophase observations have been obtained from the Pan European Phenology Project (PEP725, http://pep725.eu/). This data is available through [open credentialized access](http://www.pep725.eu/downloads/PEP725_Data_Use_Policy.pdf) (instructions below).
 Part of the data of George Mason University's competition on cherry tree flowering was used in this repository. To ensure reproducibility of the work we included a snapshot of the dataset that we used in this repository. The original data sources (as well as corresponding license) are listed in the corresponding `phenology/data/gmu_cherry/data/README.md`.
 Data from the ERA5 climate reanalysis were used as meteorological features. The subset used for this dataset is hosted at [10.5281/zenodo.15405662](https://doi.org/10.5281/zenodo.15405662) (since Zenodo supports release under the original license). The codebase will download it (about 4GB) automatically.
 
