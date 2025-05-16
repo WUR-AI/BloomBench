@@ -19,7 +19,7 @@ BloomBench was developed and ran using Python version 3.11. CUDA version 11.4 wa
 To run BloomBench, a few steps are required:
 
 - Clone this repository
-- Create login credentials at the [PEP725](http://pep725.eu/) website.
+- Create login credentials at the [PEP725](http://pep725.eu/data_download/registration.php) website.
 - Create a `phenology/data/pep725/credentials.txt` file containing a single line with the username and password separated by a single space.
 - Run `scripts/setup.sh` to install python packages and automatically obtain all required data.
 
