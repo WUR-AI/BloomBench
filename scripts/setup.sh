@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Install requirements
+pip3 install pip-tools
+pip-compile --output-file requirements.txt
 pip3 install -r requirements.txt
 
 # Obtain ERA5 meteorological features

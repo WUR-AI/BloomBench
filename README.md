@@ -23,6 +23,8 @@ To run BloomBench, a few steps are required:
 - Create a `phenology/data/pep725/credentials.txt` file containing a single line with the username and password separated by a single space.
 - Run `scripts/setup.sh` to install python packages and automatically obtain all required data.
 
+`requirements.in` specifies the required python packages to run the code and is used to install them. For completeness, `requirements_exact.txt` lists the complete package list + versions of the environment the results were generated in. The file was obtained by running `pip3 freeze > requirements_exact.txt`.
+
 ### Run
 
 After the setup is complete, reproduce all results in the benchmark by running `scripts/main.sh`.

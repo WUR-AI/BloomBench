@@ -1,0 +1,17 @@
+torch
+geopandas==1.0.1
+numpy
+pandas==2.2.3
+scikit-learn==1.6.1
+matplotlib
+openmeteo_requests
+openmeteo_sdk
+requests
+retry-requests
+requests-cache
+termcolor
+tables
+shapely
+tqdm
+zenodo-get
+Unidecode
